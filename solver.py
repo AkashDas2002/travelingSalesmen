@@ -11,9 +11,8 @@ def dist(point1, point2):
 
 def firstPath(pointArray):
     path = [0]
-    length = len(pointsArray)
-    while len(path) < length:
-        i = len(path)
-        minIndex = i
-        minDist = dist(path[-1], pointArray[i])
-        while(i < length):
+    pointsArray.pop(0)
+    while len(pointArray) > 0:
+         minIndex = 0
+         minDist = pointArray[0]
+         i = 0
