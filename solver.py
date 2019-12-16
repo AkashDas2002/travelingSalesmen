@@ -9,10 +9,19 @@ class Point:
 def dist(point1, point2):
     return math.sqrt((point1.xcor - point2.xcor) ** 2 + (point1.ycor - point2.ycor) ** 2)
 
+def pathDist(path):
+    i = 0
+    total = 0
+    while i < len(path) - 1:
+        total += dist(path[i], path[i+1])
+        i += 1
+    return total
+
 def reverseSubArray(list, i, j):
     list[i:j] = list[i:j][::-1]
 
-def firstPath(pointsArray):
+def firstPath(pointsArray2, start):
+    pointsArray = [pointsArray2[(i + start) % len(pointsArray2)] for i in range(len(pointsArray2))]
     numPoints = len(pointsArray)
     pathIndex = [i for i in range(numPoints)]
     for i in range(numPoints - 1):
@@ -50,29 +59,58 @@ def isCross(p1,p2,p3,p4):
     c2 = crossP(p2,p3,p4)
     c3 = crossP(p3,p1,p2)
     c4 = crossP(p4,p1,p2)
-    return ((c1 < 0 and c2 > 0) or (c1 > 0 and c2 < 0)) and ((c3 < 0 and c4 > 0) or (c3 > 0 and c4 < 0))
+    return ((c1 <= 0 and c2 >= 0) or (c1 >= 0 and c2 <= 0)) and ((c3 <= 0 and c4 >= 0) or (c3 >= 0 and c4 <= 0))
 
 def findShortPath(pointsArray):
-    a = firstPath(pointsArray)
+    a = firstPath(pointsArray, 0)
     makeCycle(a[0],a[1])
     uncross(a[0],a[1])
-    return a
+    uncross(a[0],a[1])
+    uncross(a[0],a[1])
+    minDist = pathDist(a[1])
+    minPath = a[0]
+    for i in range(len(pointsArray)):
+        d = firstPath(pointsArray, i)
+        makeCycle(d[0],d[1])
+        uncross(d[0],d[1])
+        uncross(d[0],d[1])
+        uncross(d[0],d[1])
+        if pathDist(d[1]) < minDist:
+            minDist = pathDist(d[1])
+            minPath = [(el + i) % len(pointsArray) for el in d[0]]
 
-p1 = Point(0, 0)
-p2 = Point(4, 4)
-p3 = Point(4, 0)
-p4 = Point(0, 4)
-print(findShortPath([p1,p2,p3,p4]))
+    final = minPath
+    while(final[0] != 0):
+         for i in range(len(minPath)):
+             final[i] = final[(i + 1) % len(minPath)]
+    return final
 
 
-3,9,14,4,13,3,9,13
-13,3,3,6,0,3,6,6
-q1 = Point(3,13)
-q2 = Point(9,3)
-q3 = Point(14,3)
-q4 = Point(4,6)
-q5 = Point(13,0)
-q6 = Point(3,3)
-q7 = Point(9,6)
-q8 = Point(13,6)
-print(findShortPath([q1,q2,q3,q4,q5,q6,q7,q8]))
+
+
+input = open(sys.argv[1], "r")
+output = open(sys.argv[2], "w")
+a = input.readlines()
+a = [el.strip() for el in a]
+a  = [el.split(",") for el in a]
+#print(a)
+someString = ""
+length = len(a)
+index = 0
+while index < length - 1:
+    if index % 5 == 0:
+        someString += a[index][0]
+        someString += "\n"
+    numPoints = len(a[index + 1])
+    points = []
+    i = 0
+    while i < numPoints:
+        points.append(Point(int(a[index+1][i]), int(a[index+2][i])))
+        i += 1
+    w = findShortPath(points)[:-1]
+    print(w)
+    w = [str(el) for el in w]
+    someString += ",".join(w) + "\n\n"
+    index += 5
+
+output.write(someString)
