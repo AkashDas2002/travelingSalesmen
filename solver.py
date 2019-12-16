@@ -61,6 +61,19 @@ def isCross(p1,p2,p3,p4):
     c4 = crossP(p4,p1,p2)
     return ((c1 <= 0 and c2 >= 0) or (c1 >= 0 and c2 <= 0)) and ((c3 <= 0 and c4 >= 0) or (c3 >= 0 and c4 <= 0))
 
+def crossExists(pointsArray):
+    numPoints = len(pointsArray);
+    for i in range(numPoints - 3):
+        for j in range(i+2, numPoints - 1):
+            if isCross(pointsArray[i],pointsArray[i+1],pointsArray[j], pointsArray[j+1]):
+                return True;
+    return False;
+
+
+def keepUncross(x,y):
+    while crossExists(y):
+        uncross(x,y)
+
 def findShortPath(pointsArray):
     a = firstPath(pointsArray, 0)
     makeCycle(a[0],a[1])
