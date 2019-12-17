@@ -42,7 +42,9 @@ to Show-set
     grid 8
     set locations []
     let main item which fullfile
-    set min-path item 1 main
+    set min-path 1
+    if length main > 1 [set min-path item 1 main]
+    ;set min-path item 1 main
     let xs item (which + 1) fullfile
     let ys item (which + 2) fullfile
     let i 0
@@ -66,10 +68,10 @@ to make-point [x y id]
 end
 
 to best-path
-  if dataset != "A4" and dataset != "A8" [
-    user-message "Not yet"
-    stop
-  ]
+;  if dataset != "A4" and dataset != "A8" [
+;    user-message "Not yet"
+;    stop
+;  ]
   let which findSet dataset fullfile
   if which >= 0 [
     let path item (which + 3) fullfile
@@ -79,7 +81,7 @@ end
 
 to Draw-Path [path mycolor mywidth]
     if item (length path - 1) path != 0 [set path lput 0 path ]
-    print path
+    ;print path
     let i 1
     while [i < length path] [
       let t0 item (item (i - 1) path) locations
@@ -231,8 +233,8 @@ CHOOSER
 175
 Dataset
 Dataset
-"A4" "A8" "A9" "A9-2" "A10" "A11" "A12" "A12-2" "A13" "A13-2"
-9
+"A4" "A8" "A9" "A9-2" "A10" "A11" "A12" "A12-2" "A13" "A13-2" "A30" "A50"
+11
 
 BUTTON
 195
